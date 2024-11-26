@@ -1,24 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const Login = () => {
-  const {signIn} = useContext(AuthContext)
+  const { signIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const handleLogin = (e) => {
     e.preventDefault();
     console.log(e.currenttarget);
     const form = new FormData(e.currenttarget);
-    const email = form.get('email')
-    const password = form.get('password')
-    console.log(email, password)
-    signIn(email, password)
-      .then(result => {
-        console.log(result.user)
-          .catch(error => {
-          console.error(error)
-        })
-    })
+    const email = form.get("email");
+    const password = form.get("password");
+    console.log(email, password);
+    signIn(email, password).then((result) => {
+      console.log(result.user)
+        navigate(location?.state ? location.state : '/')
+        .catch((error) => {
+        console.error(error);
+      });
+    });
   };
   return (
     <div>
@@ -59,7 +62,12 @@ const Login = () => {
             <button className="btn btn-primary">Login</button>
           </div>
         </form>
-        <p className="text-center mt-4">Do not have an account<Link className="text-blue" to='/register'>Register</Link></p>
+        <p className="text-center mt-4">
+          Do not have an account
+          <Link className="text-blue" to="/register">
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );
